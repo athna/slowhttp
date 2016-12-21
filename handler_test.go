@@ -3,10 +3,11 @@ package slowhttp
 import (
 	"context"
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 type ErrBadReq struct{}
@@ -21,7 +22,6 @@ func (e *ErrBadReq) Code() int {
 func TestMakeHTTPHandler(t *testing.T) {
 	cls := Class{"A"}
 	usr := User{"1", "fancl20"}
-	w := httptest.NewRecorder()
 
 	getClass := func(ctx context.Context, w http.ResponseWriter, r *http.Request) (context.Context, error) {
 		return context.WithValue(ctx, "class", cls), nil
@@ -42,6 +42,7 @@ func TestMakeHTTPHandler(t *testing.T) {
 		return ctx, &ErrBadReq{}
 	}
 
+	w := httptest.NewRecorder()
 	handler := MakeHTTPHandler(getClass, getUser, response)
 	handler(w, nil)
 	assert.Equal(t, 200, w.Code)
